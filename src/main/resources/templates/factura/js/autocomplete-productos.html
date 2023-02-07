@@ -39,12 +39,16 @@
                     return false;
                 }
             });
-        }
-        );
+            $("form").submit(()=>{
+                $("#plantillaItemsFactura").remove();
+                return;
+            });
+        });
 
         const itemsHelper = {
             calcularImporte: (id, precio, cantidad) => {
                 $("#total_importe_".concat(id)).html(parseInt(precio) * parseInt(cantidad));
+                itemsHelper.calcularGranTotal();
             },
             hasProducto: (id) => {
                 let resultado = false;
@@ -62,6 +66,14 @@
             },
             eliminarLineaFactura: (id)=>{
                 $("#row_".concat(id)).remove();
+                itemsHelper.calcularGranTotal();
+            },
+            calcularGranTotal: () =>{
+                let total = 0;
+                $('span[id^="total_importe_"]').each((e,i) =>{
+                    total += parseInt($(i).html());
+                });
+                $('#gran_total').html(total);
             }
 
         }
