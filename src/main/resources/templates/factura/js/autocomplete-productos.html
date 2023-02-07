@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <script type="text/javascript" th:fragment="javascript">
+        $(document).ready(() => {
+            $("#buscar_producto").autocomplete({
+                source: (request, response) => {
+                    $.ajax({
+                        url: "/factura/cargar-productos/" + request.term,
+                        dataType: "json",
+                        data: {
+                            term: request.term
+                        },
+                        success: (data) => {
+                            response($.map(data, (item) => {
+                                return {
+                                    value: item.id,
+                                    label: item.nombre,
+                                    precio: item.precio,
+                                };
+                            }));
+                        },
+                    });
+                },
+                select: (event, ui) => {
+                    // $("#buscar_producto").val(ui.item.label);
+                    if (itemsHelper.hasProducto(ui.item.value)) {
+                        itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio);
+                        return false;
+                    }
+                    let linea = $("#plantillaItemsFactura").html();
+                    linea = linea.replace(/{ID}/g, ui.item.value);
+                    linea = linea.replace(/{NOMBRE}/g, ui.item.label);
+                    linea = linea.replace(/{PRECIO}/g, ui.item.precio);
+
+                    $("#cargarItemProductos tbody").append(linea);
+                    itemsHelper.calcularImporte(ui.item.value, ui.item.precio, 1);
+                    return false;
+                }
+            });
+        }
+        );
+
+        const itemsHelper = {
+            calcularImporte: (id, precio, cantidad) => {
+                $("#total_importe_".concat(id)).html(parseInt(precio) * parseInt(cantidad));
+            },
+            hasProducto: (id) => {
+                let resultado = false;
+                $('input[name="item_id[]"]').each((e, i) => {
+                    if (parseInt(id) == parseInt($(i).val())) {
+                        resultado = true;
+                    }
+                });
+                return resultado;
+            },
+            incrementaCantidad: (id, precio) => {
+                let cantidad = $("#cantidad_".concat(id)).val() ? parseInt($("#cantidad_".concat(id)).val()) : 0;
+                $("#cantidad_".concat(id)).val(++cantidad);
+                itemsHelper.calcularImporte(id, precio, cantidad);
+            },
+            eliminarLineaFactura: (id)=>{
+                $("#row_".concat(id)).remove();
+            }
+
+        }
+    </script>
+</body>
+
+</html>
