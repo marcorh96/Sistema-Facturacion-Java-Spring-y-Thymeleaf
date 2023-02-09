@@ -21,5 +21,6 @@ public class SpringBootDataJpaApplication implements CommandLineRunner{
 		uploadFileService.deleteAll();
 		uploadFileService.init();
 	}
+	
 
 }
