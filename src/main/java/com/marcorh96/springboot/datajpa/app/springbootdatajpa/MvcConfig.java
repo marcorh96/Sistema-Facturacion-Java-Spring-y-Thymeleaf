@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+/* import org.springframework.oxm.jaxb.Jaxb2Marshaller; */
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,34 +20,40 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
-public class MvcConfig implements WebMvcConfigurer{
+public class MvcConfig implements WebMvcConfigurer {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    /* @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // TODO Auto-generated method stub
-        WebMvcConfigurer.super.addResourceHandlers(registry);
-        String resourcePath = Paths.get("spring-boot-data-jpa/uploads").toAbsolutePath().toUri().toString();
-        log.info(resourcePath);
-        registry.addResourceHandler("spring-boot-data-jpa/uploads/**")
-        .addResourceLocations(resourcePath);
-    } */
+    /*
+     * @Override
+     * public void addResourceHandlers(ResourceHandlerRegistry registry) {
+     * // TODO Auto-generated method stub
+     * WebMvcConfigurer.super.addResourceHandlers(registry);
+     * String resourcePath =
+     * Paths.get("spring-boot-data-jpa/uploads").toAbsolutePath().toUri().toString()
+     * ;
+     * log.info(resourcePath);
+     * registry.addResourceHandler("spring-boot-data-jpa/uploads/**")
+     * .addResourceLocations(resourcePath);
+     * }
+     */
 
-    public void addViewControllers(ViewControllerRegistry registry){
+    public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/error_403").setViewName("error_403");
     }
-    
+
     @Bean
     public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean(name = "localeResolver")
-    public LocaleResolver localeResolver(){
+    public LocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
         localeResolver.setDefaultLocale(new Locale("es", "ES"));
         return localeResolver;
     }
+
     @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor(){
+    public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
         localeInterceptor.setParamName("lang");
         return localeInterceptor;
@@ -53,7 +62,15 @@ public class MvcConfig implements WebMvcConfigurer{
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // TODO Auto-generated method stub
-       registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(localeChangeInterceptor());
     }
-    
+
+    @Bean
+    public Jaxb2Marshaller jaxb2Marshaller() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(
+                new Class[] {com.marcorh96.springboot.datajpa.app.springbootdatajpa.view.xml.ClienteList.class});
+        return marshaller;
+    }
+
 }

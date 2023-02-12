@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,14 +29,18 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty
     private String nombre;
+
     @NotEmpty
     private String apellido;
+
     @NotEmpty
     @Email
     private String email;
@@ -42,61 +49,57 @@ public class Cliente implements Serializable {
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:SS")
     private Date createAt;
+
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Factura> facturas;
+
+    public Cliente() {
+        facturas = new ArrayList<Factura>();
+    }
 
     private String foto;
 
-    /*
-     * @PrePersist
-     * public void prePersist(){
-     * createAt = new Date();
-     * }
-     */
-
-    public Cliente() {
-        facturas = new ArrayList<>();
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
+    public String getNombre() {
+        return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getApellido() {
+        return apellido;
     }
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getEmail() {
-        return email;
+    public Date getCreateAt() {
+        return createAt;
     }
 
     public void setCreateAt(Date createAt) {
         this.createAt = createAt;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
     }
 
     public String getFoto() {
@@ -118,13 +121,10 @@ public class Cliente implements Serializable {
     public void addFactura(Factura factura) {
         facturas.add(factura);
     }
-    
 
     @Override
     public String toString() {
         return nombre + " " + apellido;
     }
 
-
-    private static final long serialVersionUID = 1L;
 }
