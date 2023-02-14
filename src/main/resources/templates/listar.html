@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="/layout/layout :: head"></head>
+<head th:replace="~{layout/layout :: head}"></head>
 
 <body>
-    <header th:replace="/layout/layout :: header"></header>
+    <header th:replace="~{layout/layout :: header}"></header>
     <div class="container py-4">
 
         <div class="card bg-light">
@@ -51,11 +51,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <nav th:replace="/layout/paginator-nav :: paginator"></nav>
+                <nav th:replace="~{layout/paginator-nav :: paginator}"></nav>
             </div>
         </div>
     </div>
-    <footer th:replace="/layout/layout :: footer"></footer>
+    <footer th:replace="~{layout/layout :: footer}"></footer>
 </body>
 
 </html>

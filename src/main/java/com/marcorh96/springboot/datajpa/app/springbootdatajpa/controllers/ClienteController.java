@@ -62,7 +62,7 @@ public class ClienteController {
     private MessageSource messageSource;
 
     @Secured("ROLE_USER")
-    @GetMapping("spring-boot-data-jpa/uploads/{filename:.+}")
+    @GetMapping("uploads/{filename:.+}")
     public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
         Resource recurso = null;
         try {
@@ -93,7 +93,7 @@ public class ClienteController {
 
     @GetMapping("/listar-rest")
     public @ResponseBody ClienteList listarRest() {
-        return new ClienteList(clienteService.findAll()) ;
+        return new ClienteList(clienteService.findAll());
     }
 
     @GetMapping({ "/listar", "/" })
@@ -166,7 +166,9 @@ public class ClienteController {
             Locale locale) {
         Cliente cliente = null;
         if (id > 0) {
+
             cliente = clienteService.findOne(id);
+
             if (cliente == null) {
                 flash.addFlashAttribute("error", messageSource.getMessage("text.cliente.flash.db.error", null, locale));
                 return "redirect:/listar";
@@ -196,6 +198,7 @@ public class ClienteController {
                 flash.addFlashAttribute("info", mensajeFotoEliminar);
             }
         }
+        
         return "redirect:/listar";
     }
 

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="/layout/layout :: head"></head>
+<head th:replace="~{layout/layout :: head}"></head>
 
 <body>
     <div id="i18n_eliminar_factura" th:text="#{text.cliente.factura.eliminarOk}" style="display: none;"></div>
-    <header th:replace="/layout/layout :: header"></header>
+    <header th:replace="~{layout/layout :: header}"></header>
     <div class="container py-4">
         <div class="card bg-light">
             <div class="card-header" th:text="${titulo}"></div>
@@ -14,9 +14,9 @@
                     <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs"
                         th:href="@{'/factura/form/' + ${cliente.id}}" th:text="#{text.cliente.factura.crear}"></a>
                 </h4>
-                <img th:if="${#strings.length(cliente.foto) > 0}" class="img-thumbnail rounded"
+                <img th:if="${cliente.foto != null && #strings.length(cliente.foto) > 0}" class="img-thumbnail rounded"
                     style="object-fit: cover; max-width: 25%; float: left; height: 165px;"
-                    th:src="@{'/spring-boot-data-jpa/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}">
+                    th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}">
                 <ul class="list-group">
                     <li class="list-group-item" th:text="${cliente.nombre}"></li>
                     <li class="list-group-item" th:text="${cliente.apellido}"></li>
@@ -24,7 +24,7 @@
                     <li class="list-group-item" th:text="${cliente.createAt}"></li>
                 </ul>
                 <div th:if="${#lists.isEmpty(cliente.facturas)}" class="alert alert-info my-4"
-                    th:text="'No hay facturas asignadas para el cliente' + ${cliente.nombre} + ' ' + ${cliente.apellido}">
+                    th:text="'No hay facturas asignadas para el cliente ' + ${cliente.nombre} + ' ' + ${cliente.apellido}">
                 </div>
                 <table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered table-spriped my-4">
                     <thead class="thead-dark">
@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    <footer th:replace="/layout/layout :: footer"></footer>
+    <footer th:replace="~{layout/layout :: footer}"></footer>
 </body>
 
 </html>

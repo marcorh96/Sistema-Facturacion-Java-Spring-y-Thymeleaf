@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="/layout/layout :: head"></head>
+<head th:replace="~{layout/layout :: head}"></head>
+
 
 <body>
-    <header th:replace="/layout/layout :: header"></header>
+    <header th:replace="~{layout/layout :: header}"></header>
     <div class="container py-4">
         <div class="card bg-light">
             <div class="card-header" th:text="${titulo}"></div>
@@ -40,7 +41,7 @@
                         </div>
                     </div>
 
-                    <table th:replace="factura/plantilla-items :: itemsFactura"></table>
+                    <table th:replace="~{factura/plantilla-items :: itemsFactura}"></table>
                     <table id="cargarItemProductos" class="table table-sm table-striped table-hover">
                         <thead>
                             <tr>
@@ -65,8 +66,8 @@
             </div>
         </div>
     </div>
-    <footer th:replace="/layout/layout :: footer"></footer>
-    <script th:replace="factura/js/autocomplete-productos :: javascript"></script>
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+    <script th:replace="~{factura/js/autocomplete-productos :: javascript}"></script>
 </body>
 
 </html>
